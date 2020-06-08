@@ -1,43 +1,33 @@
-import pygame
+import pygame as pg
 import sys
 
-pygame.init()
+BGColor= (0,0,0)
 
-clock = pygame.time.Clock()
+class Game:
+
+    def __init__(self):
+        self.pantalla= pg.display.set_mode((800, 600))
+        self.pantalla.fill(BGColor)
+        pg.display.set_caption('Pong')
+
+    def main_loop(self):
+        game_over = False
+
+        while not game_over:
+            for event in pg.event.get():
+                if event.type== pg.QUIT:
+                    game_over= True
+
+            pg.display.flip()
+
+    def quit(self):
+        pg.quit()
+        sys.exit()
 
 
-pantalla= pygame.display.set_mode((600, 400))
-
-pygame.display.set_caption('Hola mundo')  #titulo de la pantalla
-
-rojo= 0
-direcc= 1
-
-juego_activo= True
-
-while juego_activo:
-    #clock.tick(100)
-    for event in pygame.event.get():   #Eventos
-        if event.type== pygame.QUIT:
-            juego_activo= False
-            
-    
-    if rojo >= 255:
-        direcc = -1
-
-    if rojo <= 0:
-
-        direcc = 1      #cambios
-        
-    rojo += direcc
-    
-    pantalla.fill((rojo, 0, 0))
-
-    pygame.display.flip()   #pintar pantalla
-    pygame.time.delay(5)
-                
-pygame.quit()
-sys.exit()
-    
-
+if __name__== '__main__':
+    pg.init()
+    game= Game()
+    game.main_loop()
+    game.quit()
 
