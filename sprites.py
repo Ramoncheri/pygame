@@ -9,25 +9,29 @@ WHITE= (255, 255, 255)
 class Ball(pg.sprite.Sprite):
     vx = 0
     vy = 0
-    __color = WHITE
+    num_sprites = 12
+   
 
     def __init__(self):
-        self.image= pg.Surface((20, 20))
-        self.color = YELLOW
-        self.image.fill(self.__color)
+        self.image= pg.Surface((20, 20), pg.SRCALPHA, 32)  #SCRALPHA es que soporte  transparencia. El numero son los bits de color
         self.rect= self.image.get_rect()  #obtiene el rectangulo que se necesita en los sprites
+        self.images= self.loadImages()
+        self.image_activa = 0
+        self.image.blit(self.images[self.image_activa],(0, 0))  #posiciona la imagen activa sobre el Surface image, en la coord.(0,0) del Surface
         self.reset()
         self.ping= pg.mixer.Sound('./resources/sounds/ping.wav')
         self.lost_point= pg.mixer.Sound('./resources/sounds/lost-point.wav')
 
-    @property   #como para cambiar el color, se hace a traves de una funcion(.fill), hay que hacer una funcion para cambiar el color facilmente
-    def color(self):
-        return self.__color
-    
-    @color.setter
-    def color(self, tupla_color):
-        self.__color= tupla_color
-        self.image.fill(self.__color)
+    def loadImages(self):
+        '''
+        images= []
+        for i in range (self.num_sprites):
+            image= pg.image.load('./resources/sprites/f_{}.png'.format(i))
+            images.append(image)
+        return images
+        '''
+        images= [pg.image.load('./resources/sprites/f_{}.png'.format(i)) for i in range (self.num_sprites)]
+        return images
 
     def reset(self):
         self.vx= random.choice([-2, -1, 1.3, 2]) #velocidad de la bola en  x e y
@@ -59,6 +63,22 @@ class Ball(pg.sprite.Sprite):
 
         self.rect.centerx += self.vx
         self.rect.centery += self.vy
+
+        #animacion de la bola
+        '''
+        self.image_activa += 1
+        if self.image_activa >= self.num_sprites:
+            self.image_activa = 0
+        '''
+            #es lo mismo que:
+        '''
+        self.image_activa += 1
+        self.image_activa = self.image_activa % self.num_sprites
+        '''
+            #es lo mismo que:
+        self.image_activa= (self.image_activa + 1) % self.num_sprites
+
+        self.image.blit(self.images[self.image_activa], (0, 0))
 
 
 class Raquet(pg.sprite.Sprite):
