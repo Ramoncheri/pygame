@@ -13,6 +13,7 @@ class Ball(pg.sprite.Sprite):
    
 
     def __init__(self):
+        super().__init__()
         self.image= pg.Surface((20, 20), pg.SRCALPHA, 32)  #SCRALPHA es que soporte  transparencia. El numero son los bits de color
         self.rect= self.image.get_rect()  #obtiene el rectangulo que se necesita en los sprites
         self.images= self.loadImages()
@@ -39,6 +40,7 @@ class Ball(pg.sprite.Sprite):
         self.rect.centerx= 400   #rect tiene los metodos para calcular el centro del rectangulo.
         self.rect.centery= 300
 
+    '''
     def comprobarChoque(self, algo ): #el algo será el player1 y el player2
         dx= abs(self.rect.centerx - algo.rect.centerx)
         dy= abs (self.rect.centery - algo.rect.centery)
@@ -50,6 +52,16 @@ class Ball(pg.sprite.Sprite):
             self.rect.centerx += self.vx
             self.rect.centery += self.vy
             self.ping.play()
+    '''
+    def comprobarChoque(self, group):
+        lista_candidatos= pg.sprite.spritecollide(self, group, False)
+        if len(lista_candidatos) > 0:
+            self.vx *= -1.1
+            self.vy *= random.uniform(0.8, 1.3)
+            self.rect.centerx += self.vx
+            self.rect.centery += self.vy
+            self.ping.play()
+
 
     def update(self, limSupX, limSupY):
         if self.rect.centerx >= limSupX or self.rect.centerx <= 0:
@@ -87,6 +99,7 @@ class Raquet(pg.sprite.Sprite):
     __color= WHITE
 
     def __init__(self, centerx):
+        super().__init__()
         self.image= pg.Surface((20 ,100))
         self.image.fill(self.__color)
         self.rect= self.image.get_rect()
@@ -103,7 +116,7 @@ class Raquet(pg.sprite.Sprite):
         self.__color= tupla_color
         self.image.fill(self.__color)
 
-    def update(self, limSupY):
+    def update(self, limSupX, limSupY):
         self.rect.centerx += self.vx
         self.rect.centery += self.vy
 
